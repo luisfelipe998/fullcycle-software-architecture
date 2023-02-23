@@ -72,3 +72,142 @@ Some categories:
 - Marketing: Metrics about usage to impact users
 
 ## Class 10: Architectural features
+Understand and have awareness about the architectural features of the solution, in order to solve problems intentionally rather than by luck.
+
+Areas:
+- operational
+- structural
+- cross-cutting
+
+## Class 11: Operational
+- **Availability**: how to manage it. SLA's. How critical the system is.
+- **Disaster recovery**: how to recover when the system goes down. How to act. How to manage infrastructure downtime
+- **Performance**: throughput and latency (response time). Design the system according to the performance requirements
+- **Backups**: how it's done. Where it's stored. Test the backup.
+- **Reliability & Security**: data traffic. Payment and personal data. Handle DDoS attacks. Handle brute force attacks. 
+- **Robustness**: scaling up and down. Handle availability zone downtimes.
+- **Scalability**: Horizontally e vertically.
+
+## Class 12: Structural
+- **Configurable**: connections, api keys, etc. The app should not be changed to run in staging or production environments.
+- **Extensiblity**: New software (usually 3rd party) should be easily pluggable on the app.
+- **Easily deployable**: standardization of envinroment: containers. Relates to configuration as well. How to manage dependencies that demands configuration (creation of tables, topics etc).
+- **Reuse of Components**: Use the same libraries. Use the same layer of abstraction in different contexts.
+- **I18n**: on backend: think which aspects will be affected (e.g. currency).
+- **Easily maintanance**: take SOLID into consideration. Prefer the simple. Have good tests.
+- **Portability**: Affect the application the least possible when changing a vendor dependency
+- **Support**: Have consolidated logs, debugging, observability
+
+## Class 13: Cross-cutting
+- **Accessibility**: frontend libs to help with it
+- **Data Retention & Recovery**: how many time maintain data. Do you have all the data you need? Do you need all the data you have? Tools: elasticsearch, prometheus
+- **Authentication & Authorization**: Normally is used and Identity Provider. Or the system is behind an API Gateway that already handled the authentication
+- **Legal**: Compliance with countries legal requirements
+- **Privacy**: Keep the user data safe and private
+- **Security**: Webfirewall (identify bots and OWASP attacks). Use the consolidated cryptography available. 
+- **Usability**: Understand how to user consumes the application. In backend: API documentation and versioning. Standardization of responses.
+
+## Class 14: Perspectives to architect software
+- Performance
+- Scalability
+- Resilience
+
+## Class 15: Metrics for performance
+How the system behaves to handle a workload
+
+- Latency (response time): time between the call and the response
+- Throughput: how many requests the system can process
+
+Performance != scalability
+
+Points to improve performance:
+- lower latency:
+    - measured in ms
+    - includes processing time, network and external calls
+- Increase throughput:
+    - more requests per second simultaneously
+    - is related to latency
+
+## Class 16: checklist to increase performance
+Reasons to low performance:
+- ineffective processing
+- limited computing resources
+- blocking calls
+- serialized access to resources
+
+Ways to increase performance:
+- scale computing capacity (CPU, disk, memory, network)
+- software logic (algorithms, queries, indices, framework overheads)
+- concurrency and paralelism
+- databases (types, schemas, understand which queries are bottlenecking the calls)
+- caching
+
+## Class 17: Scaling, concurrency and paralelism
+- Vertical scaling: increase computational resources
+- Horizontal scaling: increase number of app replicas and balance load with a load balancer or reverse proxy.
+
+- Concurrency: handle several things at the same time (but doing one at a time)
+- Paralelism: Do several things at the same time
+
+Handle requests in a non-blocking way to process more requests (limited by the computational resources of managing multiple processing at the same time)
+
+## Class 18: Caching
+- Edge computing: server prior to the main server, with a cached copy of the necessary data, generally physically closer to the caller.
+- Static data: images, css (can be cached with edge computing as well)
+- Web pages: html, return cached data from previously processed request (avoid hitting the whole infrastructure and increase speed to user)
+- Internal functions: cache data processed by a slow algorithm or database
+- Objects: cache relations from database
+
+Exclusive or shared cache:
+- Exclusive: local on machine: low latency, duplicated between nodes. Session related issues (session will not be cached across all nodes).
+- Shared: higher latency: access to central cache (external database). No duplication. No session related issues, because login data is stored centralized.
+
+## Class 19: Cache vs Edge Computing
+Edge computing: CDNs: keep the data closer to the user.
+
+- Cache closer to the user (images, static files)
+- Avoid requests hitting on cloud provider/infra
+- CDN: content delivery network: replicate data across multiple datacenters. E.g. Akamai. Costs: access the content (hits on cdn) and band width necessary to replicate the data across its multiple points (mid grass).
+- Cloudflare workers: edge computing platform. 
+- Vercel: for frontend. 
+
+## Class 20: Scalability
+Ability to suport workload increases or decreases, with less or equal costs, in order to increase throughput.
+
+- Vertical & Horizontal scaling
+
+Prefer horizontal scaling. It may scale more and if one replica goes down, the others may still handle the workload
+
+## Class 21: Scaling apps - decentralization
+Horizontal scaling depends on the architecture of the system.
+
+- Machines are disposable. They should be created and deleted seamlessly
+- Ephemeral disk: ability to create and delete machines with no worries about losing data
+- App server vs Asset server: related the ephemerality. Scale the app server that queries asset servers
+- Centralized cache: related to ephemerality as well. The application doesn't store state permantly
+- Sessions: related to ephemerality as well. different app servers should share the same session
+
+## Class 22: Database scaling
+- Increasing computational resources (vertically: limited)
+- Segregate reads and writes: different databases with replicas
+- Horizontal shards: create several machines (horizontal scaling) to allow reads and/or writes, called shards (replicas).
+- Serverless: handl over the database challenges (including scaling) to the cloud provider
+- Database otimization: monitor and undestand queries performance with APM (application Performance Monitoring). Check indices performance. 
+- CQRS (command query responsibility segregation): split reads and writes 
+
+## Class 23: Reverse proxy
+Reverse proxy: server that lies in front of web servers that forwards the client requests to those web servers according to the defined rules.
+
+Popular solutions:
+- Nginx
+- HAProxy
+- Traefik
+
+## Class 24: Introduction to resilience
+It's the strategies to intentionally adapt the system when an error happens. It minimizes the risk of losing important data and/or transactions.
+
+## Class 25: Resilience strategies
+
+
+
+
