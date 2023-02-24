@@ -207,7 +207,69 @@ Popular solutions:
 It's the strategies to intentionally adapt the system when an error happens. It minimizes the risk of losing important data and/or transactions.
 
 ## Class 25: Resilience strategies
+Protect and be protected.
 
+- An app on a distributed system must have self protection mechanisms to ensure max operation.
+- One app may not send more requests to another app than it can handle
+- A running slow system is better than a down system
 
+## Class 26: Health checks
+- Way to verify the healthiness of the system
+- Determine what should be done in case of unhealthiness
+- An unhealthy system has a chance of recovery if traffic to it _ceases temporarily_. 
+- Good health checks: don't return just a static response on a /health endpoint. More data and metrics should be collected (db access, avg response time) to assert the proper system health.
 
+## Class 27: Rate limits
+- Protect the system based on the limit it was designed to support
+- Limit the amount of requests, if more requests are sent, they are blocked (return 500).
+- Rate limits should not blindly block requests. Client preferences (e.g. IP addresses) should/may be defined to avoid critical systems being prevented to access your app.
 
+## Class 28: Circuit breakers
+- Protect the system by denying further requests in case of error, normally based on exceeding throughput (returning 500)
+- States:
+    - closed circuit: requests processing normally
+    - open circuit: instant error
+    - half-open circuit: allow a specified number of requests to validete if the system is back online
+- May be implemented on code or on network
+
+## Class 29: API Gateway
+Centralize the receiving of all incoming requests, with powers to allow (and forward the request) or deny them.
+
+- Authentication: ensures inappropriate requests don't reach the system. (e.g. Kong)
+- May enable rate limis, health checks etc
+- May transform payloads (xml to json)
+- Headers enhancements
+
+## Class 30: Service Mesh
+Example: istio
+
+It handles network traffic. Enable proxies between systems through side cars. All systems communicate with each other through these proxies. With that, we may get useful insights about networking.
+
+It also avoid protection implementations by the own system:
+    - retries
+    - circuit breakers
+    - rate limits
+    - timeouts
+
+It also cryptographes communications across you applications with the proxies (mTLS)
+
+## Class 31: Async communication
+- Avoid data loss: requests may await on a queue until it's possible to process it -> process more requests that would be possible in a sync way
+- Requests are not lost if the system is down, by sending data to an intermediate that stores the data (message broker: queues)
+
+Examples: rabbitmq, kafka
+
+## Class 32: Ensure delivery with retry
+A message may not always reach the destination service. A retry operation may be implemented. Retries should not be implemented linearly without backoff (resend the request with the same interval between them). The best implementation is the exponential (1, 2, 4, 8) with jitter. This will create a small noise between the intervals (2.05, 2.1, 2.25 ms), so many concurrent systems may have their retry requests processed in slightly different times.
+There are several jitter implementations, with the best ones being the decorrelated and full-jitter with their trade-offs.
+
+## Class 33: Ensure delivery with Kafka (brokers)
+Acknowledging: different request message confirmations: Ack 0 (fire-and-forget: no one acks), Ack 1 (leader ack), Ack -1 (everyone acks). It will depend on the critically of the message (what are the issues if the message gets lost).
+
+## Class 34: Complex situations
+- What happens with the message broker is unavailable?
+- Will you lose messages?
+- Will your system be down?
+- How to ensure resilience?
+
+If we rely on the resilience of the broker, the broker turns into the single point of failure. Ask yourself: how handle it and how to manage costs of extra resilience?
